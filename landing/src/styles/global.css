@@ -1,22 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand colors — Cacao (Cocoa Brown + Jungle Green + Clay Orange triad)
-   *
-   *   PRIMARY    Cocoa Brown      → deep, warm, plantation-of-the-earth
-   *   ACCENT     Jungle Green     → leaf-cover, life, post-clean satellite signal
-   *   CTA        Clay Orange      → action — restricted to conversion buttons
-   *   HIGHLIGHT  Amber            → EUDR / risk warnings only
-   *   NEUTRAL    Ink scale        → backgrounds, text, borders
-   *
-   * NOTE: tokens are still named `blue / green / orange / amber` so that
-   * Tailwind utility classes stay short. The `blue` palette holds cocoa-brown
-   * values — semantic colour, brown chroma.
+  /* Brand colors — Cacao
+   *   PRIMARY    Cocoa Brown      → semantic key `blue`
+   *   ACCENT     Jungle Green
+   *   CTA        Clay Orange
+   *   HIGHLIGHT  Amber            → EUDR / risk warnings
+   *   NEUTRAL    Ink scale        → warm cream → near-black
    */
 
-  /* Neutral scale */
-  --color-ink-50:  #FAF7F2;
-  --color-ink-100: #F2EEE7;
+  /* Neutral scale — warm cream to deep ink */
+  --color-ink-50:  #FAF6EE;
+  --color-ink-100: #F2EBDD;
   --color-ink-200: #E4DCCE;
   --color-ink-300: #CCC0AA;
   --color-ink-400: #998E78;
@@ -39,7 +34,7 @@
   --color-blue-800: #382712;
   --color-blue-900: #251A0C;
 
-  /* Accent — Jungle Green (leaf-cover, healthy canopy) */
+  /* Accent — Jungle Green */
   --color-green-50:  #ECFDF5;
   --color-green-100: #D1FAE5;
   --color-green-200: #A7F3D0;
@@ -60,7 +55,7 @@
   --color-orange-600: #EA580C;
   --color-orange-700: #C2410C;
 
-  /* Highlight — Amber (EUDR / risk warnings) */
+  /* Highlight — Amber */
   --color-amber-50:  #FFFBEB;
   --color-amber-100: #FEF3C7;
   --color-amber-400: #FBBF24;
@@ -69,6 +64,7 @@
   --color-amber-700: #B45309;
 
   --font-sans: "Space Grotesk", "system-ui", "Segoe UI", "Roboto", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
 }
 
 html {
@@ -82,157 +78,137 @@ body {
 }
 
 /* ============================================================
- * Jungle backdrop — cocoa plantation photo + brown/green wash
- * The body element gets a CSS variable `--bg-cocoa` set inline
- * by BaseLayout (so the URL respects Astro's base path).
+ * Photo card — used inside sections to render real cocoa photos
+ * with a small overlay chip (`.stamp`). No border, no rounding.
  * ============================================================ */
-.bg-jungle {
-  background-color: #1a1610;
-  background-image:
-    linear-gradient(135deg, rgb(20 17 10 / 0.62), rgb(36 60 36 / 0.55) 60%, rgb(20 17 10 / 0.62)),
-    var(--bg-cocoa);
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
+.photo-card {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-ink-200);
 }
 
-/* Stack of white "rectangular" panels (one per section) sitting
- * on the jungle backdrop. Horizontal gutters + vertical gaps make
- * the jungle bleed between panels. */
-.panel-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-  padding: 5.5rem 0.5rem 1rem;
-}
-@media (min-width: 768px) {
-  .panel-stack {
-    gap: 1rem;
-    padding: 6.5rem 1.5rem 1.5rem;
-  }
-}
-@media (min-width: 1280px) {
-  .panel-stack {
-    padding: 6.5rem 3rem 2rem;
-  }
+.photo-card > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Each direct child of .panel-stack is a panel: white, rectangular,
- * no border, no shadow, no rounding. Just the bg color. */
-.panel-stack > section {
-  background-color: #ffffff;
-}
-
-/* Footer also sits on jungle bg — give it horizontal margin so it
- * reads as the bottom panel in the stack. */
-.footer-panel {
-  margin: 0 0.5rem 0.5rem;
-}
-@media (min-width: 768px) {
-  .footer-panel {
-    margin: 0 1.5rem 1.5rem;
-  }
-}
-@media (min-width: 1280px) {
-  .footer-panel {
-    margin: 0 3rem 2rem;
-  }
-}
-
-/* ============================================================
- * Background patterns — geometric, NOT gradient/blur sprays
- * ============================================================ */
-
-.bg-grid {
-  background-image:
-    linear-gradient(to right, rgb(36 30 20 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(36 30 20 / 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-.bg-dots {
-  background-image: radial-gradient(rgb(74 52 25 / 0.13) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-.bg-dots-green {
-  background-image: radial-gradient(rgb(5 150 105 / 0.14) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.bg-hatch {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgb(74 52 25 / 0.04),
-    rgb(74 52 25 / 0.04) 1px,
-    transparent 1px,
-    transparent 14px
+/* Subtle bottom-fade so overlay copy reads on bright photos. */
+.photo-fade-b::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgb(20 17 10 / 0.55) 100%
   );
 }
 
-/* Concentric rings — tri-color, no blur */
-.bg-rings {
-  background-image:
-    radial-gradient(circle at center, transparent 38%, rgb(74 52 25 / 0.08) 38%, rgb(74 52 25 / 0.08) 40%, transparent 40%),
-    radial-gradient(circle at center, transparent 56%, rgb(5 150 105 / 0.07) 56%, rgb(5 150 105 / 0.07) 58%, transparent 58%),
-    radial-gradient(circle at center, transparent 76%, rgb(234 88 12 / 0.06) 76%, rgb(234 88 12 / 0.06) 78%, transparent 78%);
-  background-size: 480px 480px;
-  background-position: center;
-  background-repeat: no-repeat;
+.photo-fade-t::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    transparent 40%,
+    rgb(20 17 10 / 0.55) 100%
+  );
+}
+
+/* Tinted overlay for full-bleed section photos that need overlay text */
+.photo-tint-cocoa::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgb(36 30 20 / 0.62),
+    rgb(36 60 36 / 0.45) 60%,
+    rgb(20 17 10 / 0.62)
+  );
 }
 
 /* ============================================================
- * Sophisticated solid shapes via clip-path (no outlines, no blur)
+ * Stamp — dossier-style overlay chip. Sits on photos with a thin
+ * mono uppercase rectangle. The only border-radius in the system.
  * ============================================================ */
-
-.shape-plus {
-  clip-path: polygon(40% 0%, 60% 0%, 60% 40%, 100% 40%, 100% 60%, 60% 60%, 60% 100%, 40% 100%, 40% 60%, 0% 60%, 0% 40%, 40% 40%);
+.stamp {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.shape-hex {
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+.stamp-light {
+  background-color: rgb(255 255 255 / 0.92);
+  color: var(--color-blue-800);
 }
 
-.shape-triangle-up {
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+.stamp-dark {
+  background-color: rgb(20 17 10 / 0.85);
+  color: #fff;
 }
 
-.shape-triangle-down {
-  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+.stamp-ok    { background-color: var(--color-green-700); color: #fff; }
+.stamp-warn  { background-color: var(--color-orange-600); color: #fff; }
+.stamp-amber { background-color: var(--color-amber-500); color: var(--color-ink-900); }
+
+/* ============================================================
+ * Polygon overlay — SVG draws plot polygons on top of pods photo
+ * for the GPS module's ProductSplit visual.
+ * ============================================================ */
+.polygon-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-.shape-trapezoid {
-  clip-path: polygon(22% 0%, 78% 0%, 100% 100%, 0% 100%);
+/* ============================================================
+ * Evidence row — small thumbnail strip below hero CTAs.
+ * ============================================================ */
+.evidence-thumb {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+}
+@media (min-width: 768px) {
+  .evidence-thumb { width: 64px; height: 64px; }
 }
 
-.shape-l {
-  clip-path: polygon(0% 0%, 40% 0%, 40% 60%, 100% 60%, 100% 100%, 0% 100%);
+/* ============================================================
+ * Hairlines — used to mark sections without using cards.
+ * ============================================================ */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-ink-300) 20%,
+    var(--color-ink-300) 80%,
+    transparent
+  );
 }
 
-.shape-arc {
-  border-radius: 100% 100% 0 0;
-}
-
-.shape-half-pill-r {
-  border-radius: 0 9999px 9999px 0;
-}
-
-.shape-half-pill-l {
-  border-radius: 9999px 0 0 9999px;
-}
-
-.shape-quarter-tl {
-  border-radius: 9999px 0 0 0;
-}
-
-.shape-quarter-tr {
-  border-radius: 0 9999px 0 0;
-}
-
-.shape-quarter-bl {
-  border-radius: 0 0 0 9999px;
-}
-
-.shape-quarter-br {
-  border-radius: 0 0 9999px 0;
+/* ============================================================
+ * Section number — small mono dossier-style index on the left
+ * margin of major sections. Marou-influenced restraint.
+ * ============================================================ */
+.section-no {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-400);
+  text-transform: uppercase;
 }
