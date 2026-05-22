@@ -1,0 +1,238 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors — Cacao (Cocoa Brown + Jungle Green + Clay Orange triad)
+   *
+   *   PRIMARY    Cocoa Brown      → deep, warm, plantation-of-the-earth
+   *   ACCENT     Jungle Green     → leaf-cover, life, post-clean satellite signal
+   *   CTA        Clay Orange      → action — restricted to conversion buttons
+   *   HIGHLIGHT  Amber            → EUDR / risk warnings only
+   *   NEUTRAL    Ink scale        → backgrounds, text, borders
+   *
+   * NOTE: tokens are still named `blue / green / orange / amber` so that
+   * Tailwind utility classes stay short. The `blue` palette holds cocoa-brown
+   * values — semantic colour, brown chroma.
+   */
+
+  /* Neutral scale */
+  --color-ink-50:  #FAF7F2;
+  --color-ink-100: #F2EEE7;
+  --color-ink-200: #E4DCCE;
+  --color-ink-300: #CCC0AA;
+  --color-ink-400: #998E78;
+  --color-ink-500: #6B604D;
+  --color-ink-600: #4C4334;
+  --color-ink-700: #36301F;
+  --color-ink-800: #221D14;
+  --color-ink-900: #14110A;
+  --color-ink-950: #0A0805;
+
+  /* Primary — Cocoa Brown (semantic key: blue) */
+  --color-blue-50:  #FAF5F0;
+  --color-blue-100: #F0E4D4;
+  --color-blue-200: #E0C8A8;
+  --color-blue-300: #C7A578;
+  --color-blue-400: #A37D48;
+  --color-blue-500: #7C5A2C;
+  --color-blue-600: #5C4220;
+  --color-blue-700: #4A3419;
+  --color-blue-800: #382712;
+  --color-blue-900: #251A0C;
+
+  /* Accent — Jungle Green (leaf-cover, healthy canopy) */
+  --color-green-50:  #ECFDF5;
+  --color-green-100: #D1FAE5;
+  --color-green-200: #A7F3D0;
+  --color-green-300: #6EE7B7;
+  --color-green-400: #34D399;
+  --color-green-500: #10B981;
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065F46;
+
+  /* CTA — Clay Orange */
+  --color-orange-50:  #FFF7ED;
+  --color-orange-100: #FFEDD5;
+  --color-orange-200: #FED7AA;
+  --color-orange-300: #FDBA74;
+  --color-orange-400: #FB923C;
+  --color-orange-500: #F97316;
+  --color-orange-600: #EA580C;
+  --color-orange-700: #C2410C;
+
+  /* Highlight — Amber (EUDR / risk warnings) */
+  --color-amber-50:  #FFFBEB;
+  --color-amber-100: #FEF3C7;
+  --color-amber-400: #FBBF24;
+  --color-amber-500: #F59E0B;
+  --color-amber-600: #D97706;
+  --color-amber-700: #B45309;
+
+  --font-sans: "Space Grotesk", "system-ui", "Segoe UI", "Roboto", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+ * Jungle backdrop — cocoa plantation photo + brown/green wash
+ * The body element gets a CSS variable `--bg-cocoa` set inline
+ * by BaseLayout (so the URL respects Astro's base path).
+ * ============================================================ */
+.bg-jungle {
+  background-color: #1a1610;
+  background-image:
+    linear-gradient(135deg, rgb(20 17 10 / 0.62), rgb(36 60 36 / 0.55) 60%, rgb(20 17 10 / 0.62)),
+    var(--bg-cocoa);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+/* Stack of white "rectangular" panels (one per section) sitting
+ * on the jungle backdrop. Horizontal gutters + vertical gaps make
+ * the jungle bleed between panels. */
+.panel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 5.5rem 0.5rem 1rem;
+}
+@media (min-width: 768px) {
+  .panel-stack {
+    gap: 1rem;
+    padding: 6.5rem 1.5rem 1.5rem;
+  }
+}
+@media (min-width: 1280px) {
+  .panel-stack {
+    padding: 6.5rem 3rem 2rem;
+  }
+}
+
+/* Each direct child of .panel-stack is a panel: white, rectangular,
+ * no border, no shadow, no rounding. Just the bg color. */
+.panel-stack > section {
+  background-color: #ffffff;
+}
+
+/* Footer also sits on jungle bg — give it horizontal margin so it
+ * reads as the bottom panel in the stack. */
+.footer-panel {
+  margin: 0 0.5rem 0.5rem;
+}
+@media (min-width: 768px) {
+  .footer-panel {
+    margin: 0 1.5rem 1.5rem;
+  }
+}
+@media (min-width: 1280px) {
+  .footer-panel {
+    margin: 0 3rem 2rem;
+  }
+}
+
+/* ============================================================
+ * Background patterns — geometric, NOT gradient/blur sprays
+ * ============================================================ */
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(36 30 20 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(36 30 20 / 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bg-dots {
+  background-image: radial-gradient(rgb(74 52 25 / 0.13) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-dots-green {
+  background-image: radial-gradient(rgb(5 150 105 / 0.14) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.bg-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(74 52 25 / 0.04),
+    rgb(74 52 25 / 0.04) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+/* Concentric rings — tri-color, no blur */
+.bg-rings {
+  background-image:
+    radial-gradient(circle at center, transparent 38%, rgb(74 52 25 / 0.08) 38%, rgb(74 52 25 / 0.08) 40%, transparent 40%),
+    radial-gradient(circle at center, transparent 56%, rgb(5 150 105 / 0.07) 56%, rgb(5 150 105 / 0.07) 58%, transparent 58%),
+    radial-gradient(circle at center, transparent 76%, rgb(234 88 12 / 0.06) 76%, rgb(234 88 12 / 0.06) 78%, transparent 78%);
+  background-size: 480px 480px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ============================================================
+ * Sophisticated solid shapes via clip-path (no outlines, no blur)
+ * ============================================================ */
+
+.shape-plus {
+  clip-path: polygon(40% 0%, 60% 0%, 60% 40%, 100% 40%, 100% 60%, 60% 60%, 60% 100%, 40% 100%, 40% 60%, 0% 60%, 0% 40%, 40% 40%);
+}
+
+.shape-hex {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.shape-triangle-up {
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.shape-triangle-down {
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+.shape-trapezoid {
+  clip-path: polygon(22% 0%, 78% 0%, 100% 100%, 0% 100%);
+}
+
+.shape-l {
+  clip-path: polygon(0% 0%, 40% 0%, 40% 60%, 100% 60%, 100% 100%, 0% 100%);
+}
+
+.shape-arc {
+  border-radius: 100% 100% 0 0;
+}
+
+.shape-half-pill-r {
+  border-radius: 0 9999px 9999px 0;
+}
+
+.shape-half-pill-l {
+  border-radius: 9999px 0 0 9999px;
+}
+
+.shape-quarter-tl {
+  border-radius: 9999px 0 0 0;
+}
+
+.shape-quarter-tr {
+  border-radius: 0 9999px 0 0;
+}
+
+.shape-quarter-bl {
+  border-radius: 0 0 0 9999px;
+}
+
+.shape-quarter-br {
+  border-radius: 0 0 9999px 0;
+}
